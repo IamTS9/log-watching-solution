@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log File Monitor</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #log { white-space: pre-wrap; background: #f4f4f4; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Log File Monitor</h1>
+    <div id="log">Connecting to log file...</div>
+
+    <script>
+        const logContainer = document.getElementById('log');
+        const socket = new WebSocket('ws://localhost:6789');
+
+        socket.onopen = function () {
+            logContainer.textContent = 'Connected to log file...';
+        };
+
+        socket.onmessage = function (event) {
+            logContainer.textContent += '\n' + event.data;
+            logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll to the bottom
+        };
+
+        socket.onerror = function (error) {
+            logContainer.textContent = 'WebSocket Error: ' + error;
+        };
+
+        socket.onclose = function () {
+            logContainer.textContent = 'WebSocket connection closed';
+        };
+    </script>
+</body>
+</html>
